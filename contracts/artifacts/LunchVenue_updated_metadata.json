@@ -56,25 +56,6 @@
 			{
 				"inputs": [
 					{
-						"internalType": "address",
-						"name": "friendAddress",
-						"type": "address"
-					}
-				],
-				"name": "checkIfAlreadyVoted",
-				"outputs": [
-					{
-						"internalType": "bool",
-						"name": "votedAlready",
-						"type": "bool"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
 						"internalType": "uint256",
 						"name": "restaurant",
 						"type": "uint256"
@@ -260,14 +241,6 @@
 						"_0": "Number of restaurants added so far"
 					}
 				},
-				"checkIfAlreadyVoted(address)": {
-					"params": {
-						"friendAddress": "Friend's account/address"
-					},
-					"returns": {
-						"votedAlready": "Has the friend voted already?"
-					}
-				},
 				"constructor": {
 					"details": "Set manager when contract starts"
 				},
@@ -293,9 +266,6 @@
 				"addRestaurant(string)": {
 					"notice": "Add a new restaurant"
 				},
-				"checkIfAlreadyVoted(address)": {
-					"notice": "Check if a friend has already voted "
-				},
 				"doVote(uint256)": {
 					"notice": "Vote for a restaurant"
 				}
@@ -320,11 +290,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0xf885da0aa7decfe179827920934278f89e31f2053914f76ba737ad219e2d2c06",
+			"keccak256": "0xa049a5509cb1cc5611fbaa40aff574aa038a393f65ed72af5bcdd7b586e13ee6",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://276975cc0e1dc9f908341a20214ea32ede0e4ae27e5a50e947f879ecf3287a69",
-				"dweb:/ipfs/QmSzfVkSizCinYqwGY4SFvF11DgpK1VbhSihBsq82ynqwy"
+				"bzz-raw://2e2871144b05c55337ed8dced7925507517424dbc36bdde19544d5151731004d",
+				"dweb:/ipfs/QmPqpVuwbuzrBADj39Cy44t96HV3uZJm9iA3bq7CWX8E1h"
 			]
 		}
 	},

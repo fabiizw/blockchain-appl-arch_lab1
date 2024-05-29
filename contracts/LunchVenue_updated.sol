@@ -65,20 +65,6 @@ contract LunchVenue_updated{
         numFriends++;
         return numFriends;
     }
-    
-    /**
-    * @notice Check if a friend has already voted
-    * 
-    * @param friendAddress Friend's account/address
-    * @return votedAlready Has the friend voted already?
-    */
-    function checkIfAlreadyVoted(address friendAddress) public view returns (bool votedAlready){
-        votedAlready = false;
-        if (friends[friendAddress].voted) {
-            votedAlready = true;
-        }
-        return votedAlready;
-    }
 
     /** 
      * @notice Vote for a restaurant
@@ -88,7 +74,7 @@ contract LunchVenue_updated{
      * @return validVote Is the vote valid? A valid vote should be from a registered 
      * friend to a registered restaurant
     */
-    function doVote(uint restaurant) public votingOpen returns (bool validVote){
+    function doVote(uint restaurant) public votingOpen votedAlready(msg.sender) returns (bool validVote){
         validVote = false;                                  //Is the vote valid?
         if (bytes(friends[msg.sender].name).length != 0) {  //Does friend exist?
             if (bytes(restaurants[restaurant]).length != 0) {   //Does restaurant exist?
@@ -102,6 +88,7 @@ contract LunchVenue_updated{
             }
         }
         
+
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
             finalResult();
         }
@@ -145,6 +132,14 @@ contract LunchVenue_updated{
      */
     modifier votingOpen() {
         require(voteOpen == true, "Can vote only while voting is open.");
+        _;
+    }
+
+    /**
+     * @notice Only vote one time
+     */
+    modifier votedAlready(address friendAddress) {
+        require(friends[friendAddress].voted == false, "Can only vote once."); //checks the 'voted' property of the friend
         _;
     }
 }
