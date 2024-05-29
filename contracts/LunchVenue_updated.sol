@@ -49,7 +49,7 @@ contract LunchVenue_updated{
     /**
     * @notice Ends the vote stage
     */
-    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet {
+    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet { //only end it when quorum is met
         currentStage = Stage.VOTE_CLOSED;
         finalResult();
     }
