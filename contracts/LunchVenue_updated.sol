@@ -17,6 +17,9 @@ contract LunchVenue_updated{
         uint restaurant;
     }
 
+    enum Stage { CREATE, VOTE_OPEN, VOTE_CLOSED }
+    Stage public currentStage = Stage.CREATE; //set 'CREATE' as the beginning stage
+
     mapping (uint => string) public restaurants; //List of restaurants (restaurant no, name)
     mapping(address => Friend) public friends;  //List of friends (address, Friend)
     uint public numRestaurants = 0;
@@ -37,13 +40,28 @@ contract LunchVenue_updated{
     }
 
     /**
+    * @notice Starts the vote stage
+    */
+    function startVote() public restricted inStage(Stage.CREATE) {
+        currentStage = Stage.VOTE_OPEN;
+    }
+
+    /**
+    * @notice Ends the vote stage
+    */
+    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet {
+        currentStage = Stage.VOTE_CLOSED;
+        finalResult();
+    }
+
+    /**
      * @notice Add a new restaurant
      * @dev To simplify the code, duplication of restaurants isn't checked --> now implemented with restaurantAlreadyExists modifier
      *
      * @param name Restaurant name
      * @return Number of restaurants added so far
      */
-    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) returns (uint){
+    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) inStage(Stage.CREATE) returns (uint){
         numRestaurants++;
         restaurants[numRestaurants] = name;
         return numRestaurants;
@@ -57,7 +75,7 @@ contract LunchVenue_updated{
      * @param name Friend's name
      * @return Number of friends added so far
      */
-    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) returns (uint){
+    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) inStage(Stage.CREATE) returns (uint){
         Friend memory f;
         f.name = name;
         f.voted = false;
@@ -74,7 +92,7 @@ contract LunchVenue_updated{
      * @return validVote Is the vote valid? A valid vote should be from a registered 
      * friend to a registered restaurant
     */
-    function doVote(uint restaurant) public votingOpen votedAlready(msg.sender) returns (bool validVote){
+    function doVote(uint restaurant) public votingOpen votedAlready(msg.sender) inStage(Stage.VOTE_OPEN) returns (bool validVote){
         validVote = false;                                  //Is the vote valid?
         if (bytes(friends[msg.sender].name).length != 0) {  //Does friend exist?
             if (bytes(restaurants[restaurant]).length != 0) {   //Does restaurant exist?
@@ -183,6 +201,25 @@ contract LunchVenue_updated{
         _; 
 
         */
+    }
 
+    /**
+     * @notice Only call functions in the correct stage
+     */
+    modifier inStage(Stage stage) {
+        require(currentStage == stage, "Function can not be called in this stage.");
+        _;
+    }
+
+    /**
+     * @notice Voting quorum has to be met
+     */
+    modifier quorumIsMet () {
+        bool quorumIsMet = false;
+        if (numVotes >= numFriends/2 + 1) { //Quorum is met
+            quorumIsMet = true;
+        }
+        require(!quorumIsMet, "Voting quorum is not met. Keep voting.");
+        _;
     }
 }

@@ -54,6 +54,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "currentStage",
+				"outputs": [
+					{
+						"internalType": "enum LunchVenue_updated.Stage",
+						"name": "",
+						"type": "uint8"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -69,6 +82,13 @@
 						"type": "bool"
 					}
 				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "endVote",
+				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
 			},
@@ -165,6 +185,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "startVote",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -268,6 +295,12 @@
 				},
 				"doVote(uint256)": {
 					"notice": "Vote for a restaurant"
+				},
+				"endVote()": {
+					"notice": "Ends the vote stage"
+				},
+				"startVote()": {
+					"notice": "Starts the vote stage"
 				}
 			},
 			"version": 1
@@ -290,11 +323,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0xaadb2ee0be968b8e15eefc8db4e3f2ee99ee0118799db38c3c671468330d2a08",
+			"keccak256": "0x07545dddbb9fca2d9ed114224a2095c49a3324b41c47f2dc4a43a5926e286e38",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://58bd01723e8a76a19c5391e7dc8832b963ed10f8282cff37ac29b624ed805f62",
-				"dweb:/ipfs/QmUVuw9prSJGrCHKmHb381FxED8z9T7a31shnqQJByyezQ"
+				"bzz-raw://4f7d87b14ad434e995af15f3c7a3009e8a24ed7b416a2ec6cd4b12f61e0dd2a0",
+				"dweb:/ipfs/QmbQjPGwDe3gDyiuCBJ171KRGegxE2nDbXsNqf6MUAFvBF"
 			]
 		}
 	},
