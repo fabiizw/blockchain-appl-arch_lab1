@@ -38,7 +38,7 @@ contract LunchVenue_updated{
 
     /**
      * @notice Add a new restaurant
-     * @dev To simplify the code, duplication of restaurants isn't checked
+     * @dev To simplify the code, duplication of restaurants isn't checked --> now implemented with restaurantAlreadyExists modifier
      *
      * @param name Restaurant name
      * @return Number of restaurants added so far
@@ -51,7 +51,7 @@ contract LunchVenue_updated{
 
     /**
      * @notice Add a new friend to voter list
-     * @dev To simplify the code duplication of friends is not checked
+     * @dev To simplify the code duplication of friends is not checked --> now implemented with friendAlreadyExists modifier
      *
      * @param friendAddress Friend's account/address
      * @param name Friend's name
@@ -68,7 +68,7 @@ contract LunchVenue_updated{
 
     /** 
      * @notice Vote for a restaurant
-     * @dev To simplify the code duplicate votes by a friend is not checked
+     * @dev To simplify the code duplicate votes by a friend is not checked --> now implemented with votedAlready modifier
      *
      * @param restaurant Restaurant number being voted
      * @return validVote Is the vote valid? A valid vote should be from a registered 

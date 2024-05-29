@@ -223,7 +223,7 @@
 			"kind": "dev",
 			"methods": {
 				"addFriend(address,string)": {
-					"details": "To simplify the code duplication of friends is not checked",
+					"details": "To simplify the code duplication of friends is not checked --> now implemented with friendAlreadyExists modifier",
 					"params": {
 						"friendAddress": "Friend's account/address",
 						"name": "Friend's name"
@@ -233,7 +233,7 @@
 					}
 				},
 				"addRestaurant(string)": {
-					"details": "To simplify the code, duplication of restaurants isn't checked",
+					"details": "To simplify the code, duplication of restaurants isn't checked --> now implemented with restaurantAlreadyExists modifier",
 					"params": {
 						"name": "Restaurant name"
 					},
@@ -245,7 +245,7 @@
 					"details": "Set manager when contract starts"
 				},
 				"doVote(uint256)": {
-					"details": "To simplify the code duplicate votes by a friend is not checked",
+					"details": "To simplify the code duplicate votes by a friend is not checked --> now implemented with votedAlready modifier",
 					"params": {
 						"restaurant": "Restaurant number being voted"
 					},
@@ -290,11 +290,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0xf87141c70e8a3799356d40a7874cb235e37cd2ceff0db09d834271b68e38dc63",
+			"keccak256": "0xaadb2ee0be968b8e15eefc8db4e3f2ee99ee0118799db38c3c671468330d2a08",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://cae29d9f2f5740136f267d4a862db9eaeaa775a2cddceab5161353df9758f694",
-				"dweb:/ipfs/QmRNUoUyv64Yy53otr7Y2wqVFmbbyUpQdXEYPxskdtCwyf"
+				"bzz-raw://58bd01723e8a76a19c5391e7dc8832b963ed10f8282cff37ac29b624ed805f62",
+				"dweb:/ipfs/QmUVuw9prSJGrCHKmHb381FxED8z9T7a31shnqQJByyezQ"
 			]
 		}
 	},
