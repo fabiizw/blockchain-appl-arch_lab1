@@ -275,7 +275,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"contracts/LunchVenue.sol": "LunchVenue"
+			"contracts/LunchVenue_updated.sol": "LunchVenue"
 		},
 		"evmVersion": "berlin",
 		"libraries": {},
@@ -289,7 +289,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"contracts/LunchVenue.sol": {
+		"contracts/LunchVenue_updated.sol": {
 			"keccak256": "0x2a333063a2fb1d3f8bda9ceb5f05678277176d7733af1e4b935323dd4e50610d",
 			"license": "UNLICENSED",
 			"urls": [
