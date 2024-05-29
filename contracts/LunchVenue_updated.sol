@@ -43,7 +43,7 @@ contract LunchVenue_updated{
      * @param name Restaurant name
      * @return Number of restaurants added so far
      */
-    function addRestaurant(string memory name) public restricted returns (uint){
+    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) returns (uint){
         numRestaurants++;
         restaurants[numRestaurants] = name;
         return numRestaurants;
@@ -57,7 +57,7 @@ contract LunchVenue_updated{
      * @param name Friend's name
      * @return Number of friends added so far
      */
-    function addFriend(address friendAddress, string memory name) public restricted returns (uint){
+    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) returns (uint){
         Friend memory f;
         f.name = name;
         f.voted = false;
@@ -88,10 +88,12 @@ contract LunchVenue_updated{
             }
         }
         
-
+        /*
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
             finalResult();
         }
+        */
+        
         return validVote;
     }
 
@@ -141,5 +143,46 @@ contract LunchVenue_updated{
     modifier votedAlready(address friendAddress) {
         require(friends[friendAddress].voted == false, "Can only vote once."); //checks the 'voted' property of the friend
         _;
+    }
+
+    /**
+     * @notice Only add restaurants once
+     */
+    modifier restaurantAlreadyExists(string memory name) {
+        bool restaurantAlreadyExists = false;
+
+        for (uint i = 1; i <= numRestaurants; i++) { //iterate over every restaurant in the list
+            if (keccak256(abi.encodePacked(restaurants[i])) == keccak256(abi.encodePacked(name))) { //compare the strings (names of the restaurants) using keccak156 function
+                restaurantAlreadyExists = true;
+                break; //breaks the foor loop as soon as one match was found
+            }
+        }
+        require(!restaurantAlreadyExists, "Restaurant already exists.");
+        _; 
+    }
+    
+    
+
+    /**
+     * @notice Only add friends once
+     */
+    modifier friendAlreadyExists(address friendAddress) {
+        require(bytes(friends[friendAddress].name).length == 0, "Friend already exists");
+        _;
+        /*
+
+        bool friendAlreadyExists = false;
+
+        for (uint i = 1; i <= numFriends; i++) { //iterate over every friend in the list
+            if (keccak256(abi.encodePacked(friends[i].name)) == keccak256(abi.encodePacked(name))) { //compare the strings (names) using keccak156 function
+                friendAlreadyExists = true;
+                break; //breaks the foor loop as soon as one match was found
+            }
+        }
+        require(!friendAlreadyExists, "Friend already exists.");
+        _; 
+
+        */
+
     }
 }
