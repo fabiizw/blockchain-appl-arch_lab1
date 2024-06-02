@@ -17,7 +17,7 @@ contract LunchVenue_updated{
         uint restaurant;
     }
 
-    enum Stage { CREATE, VOTE_OPEN, VOTE_CLOSED }
+    enum Stage { CREATE, VOTE_OPEN, VOTE_CLOSED } //enum of different stages
     Stage public currentStage = Stage.CREATE; //set 'CREATE' as the beginning stage
 
     mapping (uint => string) public restaurants; //List of restaurants (restaurant no, name)
@@ -30,7 +30,7 @@ contract LunchVenue_updated{
 
     mapping (uint => Vote) public votes;        //List of votes (vote no, Vote)
     mapping (uint => uint) private _results;    //List of vote counts (restaurant no, no of votes)
-    bool public voteOpen = true;                //voting is open
+    bool public stopped = false;                //Contract by default is not stopped
 
     /**
      * @dev Set manager when contract starts
@@ -42,16 +42,23 @@ contract LunchVenue_updated{
     /**
     * @notice Starts the vote stage
     */
-    function startVote() public restricted inStage(Stage.CREATE) {
+    function startVote() public restricted inStage(Stage.CREATE) whenNotStopped {
         currentStage = Stage.VOTE_OPEN;
     }
 
     /**
     * @notice Ends the vote stage
     */
-    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet { //only end it when quorum is met
+    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet whenNotStopped { //only end it when quorum is met
         currentStage = Stage.VOTE_CLOSED;
         finalResult();
+    }
+
+     /**
+     * @notice Change the stopped state of the contract
+     */
+    function setStopped() public restricted { //Only the manager can start/stop the contract
+        stopped = !stopped;
     }
 
     /**
@@ -61,7 +68,7 @@ contract LunchVenue_updated{
      * @param name Restaurant name
      * @return Number of restaurants added so far
      */
-    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) inStage(Stage.CREATE) returns (uint){
+    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) inStage(Stage.CREATE) whenNotStopped returns (uint){
         numRestaurants++;
         restaurants[numRestaurants] = name;
         return numRestaurants;
@@ -75,12 +82,13 @@ contract LunchVenue_updated{
      * @param name Friend's name
      * @return Number of friends added so far
      */
-    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) inStage(Stage.CREATE) returns (uint){
+    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) inStage(Stage.CREATE) whenNotStopped returns (uint){
         Friend memory f;
         f.name = name;
         f.voted = false;
         friends[friendAddress] = f;
         numFriends++;
+        delete f;
         return numFriends;
     }
 
@@ -92,7 +100,7 @@ contract LunchVenue_updated{
      * @return validVote Is the vote valid? A valid vote should be from a registered 
      * friend to a registered restaurant
     */
-    function doVote(uint restaurant) public votingOpen votedAlready(msg.sender) inStage(Stage.VOTE_OPEN) returns (bool validVote){
+    function doVote(uint restaurant) public votedAlready(msg.sender) inStage(Stage.VOTE_OPEN) whenNotStopped returns (bool validVote){
         validVote = false;                                  //Is the vote valid?
         if (bytes(friends[msg.sender].name).length != 0) {  //Does friend exist?
             if (bytes(restaurants[restaurant]).length != 0) {   //Does restaurant exist?
@@ -106,11 +114,9 @@ contract LunchVenue_updated{
             }
         }
         
-        /*
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
-            finalResult();
+            endVote(); //call endVote function when quorum is met
         }
-        */
         
         return validVote;
     }
@@ -136,7 +142,7 @@ contract LunchVenue_updated{
             }
         }
         votedRestaurant = restaurants[highestRestaurant];   //Chosen restaurant
-        voteOpen = false;                                   //Voting is now closed
+        currentStage = Stage.VOTE_CLOSED;                  //Voting is now closed
     }
     
     /** 
@@ -144,14 +150,6 @@ contract LunchVenue_updated{
      */
     modifier restricted() {
         require (msg.sender == manager, "Can only be executed by the manager");
-        _;
-    }
-    
-    /**
-     * @notice Only when voting is still open
-     */
-    modifier votingOpen() {
-        require(voteOpen == true, "Can vote only while voting is open.");
         _;
     }
 
@@ -179,8 +177,6 @@ contract LunchVenue_updated{
         _; 
     }
     
-    
-
     /**
      * @notice Only add friends once
      */
@@ -220,6 +216,14 @@ contract LunchVenue_updated{
             quorumIsMet = true;
         }
         require(!quorumIsMet, "Voting quorum is not met. Keep voting.");
+        _;
+    }
+
+    /**
+     * @notice Only execute when the contract is not stopped
+     */
+    modifier whenNotStopped() {
+        require(!stopped, "Contract is stopped.");
         _;
     }
 }

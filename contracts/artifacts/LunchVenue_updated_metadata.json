@@ -189,6 +189,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "setStopped",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "startVote",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -196,7 +203,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "voteOpen",
+				"name": "stopped",
 				"outputs": [
 					{
 						"internalType": "bool",
@@ -299,6 +306,9 @@
 				"endVote()": {
 					"notice": "Ends the vote stage"
 				},
+				"setStopped()": {
+					"notice": "Change the stopped state of the contract"
+				},
 				"startVote()": {
 					"notice": "Starts the vote stage"
 				}
@@ -323,11 +333,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0x48371975eea19a9b66799a1efddec25dfa85b20f5c177c9eb55c3586aa7e192b",
+			"keccak256": "0x706ebd083949a9080bd31552d51bcc37d2a91e6ed1f6fdb157343a89b8a41850",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://540bf9683d26c5d6da24bc47c08fccdb423071f42662fca3c7de48cd7d6ddc1b",
-				"dweb:/ipfs/QmagPnCZmbWM51mWm2h8DEmCDxzG8SZbk3AoN561zBca1i"
+				"bzz-raw://f667b4f5c58c5b293d96f97a92d03e91a32ce95d115076324667e5119c505f32",
+				"dweb:/ipfs/QmUFomX3MMPSLSNzZU3RCawMVrs4msYtcW4HD52J5W4pmF"
 			]
 		}
 	},
