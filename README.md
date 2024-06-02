@@ -29,3 +29,6 @@ Questions: One can switch to the VOTE_OPEN stage without having added friends an
 I introduced a new bool variable 'stopped' which holds the state of the contract. By default it is set to false, meaning that the contract is running. 
 The new function 'setStopped' allows only the manager to change the state of the contract. When 'stopped' is true every function is disabled.
 Again, a new modifier 'whenNotStopped' makes sure of it.
+
+### Known bugs to fix
+Quorum modifier seems not working properly
