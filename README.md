@@ -18,6 +18,8 @@ Changes are only possible from stage 'CREATE' to 'VOTE_OPEN' to 'VOTE_CLOSED'. T
 For every stage I made sure, that only a choosen set of funtions can be called (again added the 'inStage' modifier to these functions). 
 For example, in the 'CREATE' stage one can execute the 'addFriends' function but not the 'doVote' function. 
 
+Therefore, I could delete the 'voteOpen' variable and the corresponding modifier.
+
 Questions: One can switch to the VOTE_OPEN stage without having added friends and restaurants. Should I check this?
 
 ### Feat. 4
