@@ -20,7 +20,7 @@ For example, in the 'CREATE' stage one can execute the 'addFriends' function but
 
 Therefore, I could delete the 'voteOpen' variable and the corresponding modifier.
 
-Questions: One can switch to the VOTE_OPEN stage without having added friends and restaurants. Should I check this?
+Questions: One can switch to the VOTE_OPEN stage without having added friends and restaurants. Should I check this? Should I go back from VOTE_OPEN to CREATE for this reasion?
 
 ### Feat. 4
 
