@@ -196,6 +196,13 @@
 			},
 			{
 				"inputs": [],
+				"name": "startCreate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "startVote",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -309,6 +316,9 @@
 				"setStopped()": {
 					"notice": "Change the stopped state of the contract"
 				},
+				"startCreate()": {
+					"notice": "Switch back to create stage"
+				},
 				"startVote()": {
 					"notice": "Starts the vote stage"
 				}
@@ -333,11 +343,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0x706ebd083949a9080bd31552d51bcc37d2a91e6ed1f6fdb157343a89b8a41850",
+			"keccak256": "0x80430885d68a2d30ab738bac1e42eac64739fc4c4ea327722c4b797b0b50dd02",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://f667b4f5c58c5b293d96f97a92d03e91a32ce95d115076324667e5119c505f32",
-				"dweb:/ipfs/QmUFomX3MMPSLSNzZU3RCawMVrs4msYtcW4HD52J5W4pmF"
+				"bzz-raw://7627a3d804befb97595c4eb58acaddcb8da721dbda3a2d79dfbf47a1e930a4b7",
+				"dweb:/ipfs/QmdQUPJjk3JQZqcxgdgjAR846YvLtfiaSRGMM3HJacm59c"
 			]
 		}
 	},

@@ -47,10 +47,16 @@ contract LunchVenue_updated{
     }
 
     /**
+    * @notice Switch back to create stage
+    */
+    function startCreate() public restricted inStage(Stage.VOTE_OPEN) whenNotStopped {
+        currentStage = Stage.CREATE;
+    }
+
+    /**
     * @notice Ends the vote stage
     */
-    function endVote() public restricted inStage(Stage.VOTE_OPEN) quorumIsMet whenNotStopped { //only end it when quorum is met
-        currentStage = Stage.VOTE_CLOSED;
+    function endVote() public restricted inStage(Stage.VOTE_CLOSED) quorumIsMet whenNotStopped { //only end it when quorum is met
         finalResult();
     }
 
@@ -115,7 +121,7 @@ contract LunchVenue_updated{
         }
         
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
-            endVote(); //call endVote function when quorum is met
+            currentStage = Stage.VOTE_CLOSED;//Sets the stage to VOTE_CLOSED, the manager can now call the endVote function
         }
         
         return validVote;
@@ -215,7 +221,7 @@ contract LunchVenue_updated{
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
             quorumIsMet = true;
         }
-        require(!quorumIsMet, "Voting quorum is not met. Keep voting.");
+        require(quorumIsMet, "Voting quorum is not met. Keep voting.");
         _;
     }
 

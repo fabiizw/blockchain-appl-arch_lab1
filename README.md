@@ -14,13 +14,11 @@ Questions: Does some friend means same adress or same name? Are same names but d
 
 I introduced an enum which holds the stage values and a new variable 'currentStage', which keeps track of the current stage phase. By default this variable is set to 'CREATE'.
 Again I implemented a new modifier which validates the current stage phase. I also added two new functions 'openVote' and 'endVote'. They are used for changing the currentStage variable.
-Changes are only possible from stage 'CREATE' to 'VOTE_OPEN' to 'VOTE_CLOSED'. The modifier 'inStage(Stage stage)' makes sure that this works properly. 
+Changes are only possible from stage 'CREATE' to 'VOTE_OPEN' to 'VOTE_CLOSED' or back to 'CREATE' in case one wants to add another restaurant/friend. The modifier 'inStage(Stage stage)' makes sure that this works properly. 
 For every stage I made sure, that only a choosen set of funtions can be called (again added the 'inStage' modifier to these functions). 
 For example, in the 'CREATE' stage one can execute the 'addFriends' function but not the 'doVote' function. 
 
 Therefore, I could delete the 'voteOpen' variable and the corresponding modifier.
-
-Questions: One can switch to the VOTE_OPEN stage without having added friends and restaurants. Should I check this? Should I go back from VOTE_OPEN to CREATE for this reasion?
 
 ### Feat. 4
 
@@ -29,6 +27,3 @@ Questions: One can switch to the VOTE_OPEN stage without having added friends an
 I introduced a new bool variable 'stopped' which holds the state of the contract. By default it is set to false, meaning that the contract is running. 
 The new function 'setStopped' allows only the manager to change the state of the contract. When 'stopped' is true every function is disabled.
 Again, a new modifier 'whenNotStopped' makes sure of it.
-
-### Known bugs to fix
-Quorum modifier seems not working properly
