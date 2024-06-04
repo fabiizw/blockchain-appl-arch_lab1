@@ -548,11 +548,11 @@
 			]
 		},
 		"tests/LunchVenue_updated_test.sol": {
-			"keccak256": "0x41b6d60c571708fcd37150e4d804d20f609b22495e8532859ba179bb6d120764",
+			"keccak256": "0x288a4e2cd0fb0449e32b76504692fcfde39a992c7354d3afd67de5bec6628e2f",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://e44373e63ef0f111cd60f6cdb067657f9dab2cd0798ac9a467b03e2f5ecb9258",
-				"dweb:/ipfs/QmfGxVUgfV9AL2Cj4KkiGYWE779hpEFK21bkec4bWxBJWv"
+				"bzz-raw://3a9249d7d24ea096b7435fe9783abdfe432917a1d0407977a60fc64993bfaa88",
+				"dweb:/ipfs/QmZrVFBY2mo3dHkTAFgNNpSQRmSBDPzrmGopzx2a9AFatG"
 			]
 		}
 	},

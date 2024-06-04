@@ -33,6 +33,9 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         acc2 = TestsAccounts.getAccount(2);
         acc3 = TestsAccounts.getAccount(3);
         acc4 = TestsAccounts.getAccount(4);
+
+        currentStage = Stage.CREATE;
+        stopped = false;
     }
 
     /// Check manager
@@ -129,7 +132,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
     function voteTwiceShouldFail() public {
         currentStage = Stage.VOTE_OPEN;
          try this.doVote(2) returns (bool validVote) {
-            Assert.equal(validVote, true, 'Method execution did not fail');
+            Assert.equal(validVote, false, 'Method execution did not fail');
         } catch Error(string memory reason) {
             // Compare failure reason, check if it is as expected
             Assert.equal(reason, 'Can only vote once.', 'Failed with unexpected reason');
