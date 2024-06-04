@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: GPL-3.0
         
 pragma solidity >=0.8.00 <0.9.0;
@@ -32,7 +33,6 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         acc2 = TestsAccounts.getAccount(2);
         acc3 = TestsAccounts.getAccount(3);
         acc4 = TestsAccounts.getAccount(4);
-        acc5 = TestsAccounts.getAccount(5);
     }
 
     /// Check manager
@@ -48,7 +48,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         Assert.equal(addRestaurant('Uni Cafe'), 2, 'Should be equal to 2');
     }
 
-    /// Try to add restaurant twice
+    /// Try to add restaurant as manager twice
     function setRestaurantTwiceShouldFail() public {
         try this.addRestaurant('Uni Cafe') returns (uint8){
             Assert.ok(false, 'Method execution did not fail');
@@ -86,24 +86,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
        Assert.equal(addFriend(acc1, 'Bob'), 2, 'Should be equal to 2');
        Assert.equal(addFriend(acc2, 'Charlie'), 3, 'Should be equal to 3');
        Assert.equal(addFriend(acc3, 'Eve'), 4, 'Should be equal to 4');
-       Assert.equal(addFriend(acc4, 'Fabi'), 5, 'Should be equal to 5');
     }
-
-    /// Try adding friend as a user other than manager. This should fail
-    /// #sender account-2
-    function setFriendFailure() public {
-        try this.addFriend(acc5, 'Daniels') returns (uint8 f) {
-            Assert.notEqual(f, 6, 'Method execution did not fail'); // This should always fail because we expect addFriend to revert
-        } catch Error(string memory reason) { // In case revert() is called
-            // Compare failure reason, check if it is as expected
-            Assert.equal(reason, 'Can only be executed by the manager', 'Failed with unexpected reason');
-        } catch Panic(uint /* errorCode */) { // In case of a panic
-            Assert.ok(false, 'Failed unexpectedly with panic error code');
-        }   catch (bytes memory /*lowLevelData*/) {
-            Assert.ok(false, 'Failed unexpectedly');
-        }   
-    }
-
 
     /// Try to add a friend twice
     function addFriendTwiceShouldFail() public {
@@ -117,6 +100,21 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'Failed unexpected');
         }
+    }
+
+    /// Try adding friend as a user other than manager. This should fail
+    /// #sender account-3
+    function setFriendFailure() public {
+        try this.addFriend(acc5, 'Daniels') returns (uint8 f) {
+            Assert.notEqual(f, 6, 'Method execution did not fail'); // This should always fail because we expect addFriend to revert
+        } catch Error(string memory reason) { // In case revert() is called
+            // Compare failure reason, check if it is as expected
+            Assert.equal(reason, 'Can only be executed by the manager', 'Failed with unexpected reason');
+        } catch Panic(uint /* errorCode */) { // In case of a panic
+            Assert.ok(false, 'Failed unexpectedly with panic error code');
+        }   catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'Failed unexpectedly');
+        }   
     }
     
     /// Vote as Bob (acc1)
@@ -150,7 +148,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
     }
     
 	/// Try voting as a user not in the friends list. This should fail
-    /// #sender: account-6
+    /// #sender: account-4
     function voteFailure() public {
         currentStage = Stage.VOTE_OPEN;
         Assert.equal(doVote(1), false, "Voting result should be false");
@@ -198,7 +196,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
 
     /// Manager wants to end the vote in the wrong stage
     function endVoteInCreateStageShouldFail() public {
-        currentStage = Stage.CREATE; // Ensure contract is in CREATE phase
+        currentStage = Stage.CREATE; // Ensure contract is in CREATE stage
         try this.endVote() {
             Assert.ok(false, 'Method execution did not fail');
         } catch Error(string memory reason) {

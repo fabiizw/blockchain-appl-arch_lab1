@@ -28,13 +28,15 @@ I introduced a new bool variable 'stopped' which holds the state of the contract
 The new function 'setStopped' allows only the manager to change the state of the contract. When 'stopped' is true every function is disabled.
 Again, a new modifier 'whenNotStopped' makes sure of it.
 
-### HELP
+### Feat. 6
 
-- endVote function has restriced modifier, endVote is used in unit tests (only be executed by manager), how to call a func as manager?
+I changed the usage of int variables to uint8 because the use less storage and for the purpose of the lab the values will not exceed the limit of 0...255.
+Mappings are already in use instead of arrays, so I did not have to change these. In addition, I changed the initilization from the objects to the direct approach, which is 
+again less gas consuming. I also added the immutable keyword to the manager address.
 
+### Feat. 7
 
-### Questions
+I added test cases, which check if a friend is added twice, a restaurant is added twice and if a friend voted twice. 
+Moreover, I have a test which validates, that the 'setStopped' function can only be executed by the manager. Same goes for the 'endVote' function, there is also a test for this.
 
-- does same friend means same name or same address?
-- is it okay if one can switch from create to vote-open back to create?
-- events which emit a function call instead of structs?
+### Known issues
