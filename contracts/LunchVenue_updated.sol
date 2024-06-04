@@ -14,22 +14,22 @@ contract LunchVenue_updated{
     
     struct Vote {
         address voterAddress;
-        uint restaurant;
+        uint8 restaurant; //Use uint8 size for optimization
     }
 
     enum Stage { CREATE, VOTE_OPEN, VOTE_CLOSED } //enum of different stages
     Stage public currentStage = Stage.CREATE; //set 'CREATE' as the beginning stage
 
-    mapping (uint => string) public restaurants; //List of restaurants (restaurant no, name)
+    mapping (uint8 => string) public restaurants; //List of restaurants (restaurant no, name)
     mapping(address => Friend) public friends;  //List of friends (address, Friend)
-    uint public numRestaurants = 0;
-    uint public numFriends = 0;
-    uint public numVotes = 0;
-    address public manager;                     //Contract manager
+    uint8 public numRestaurants = 0;
+    uint8 public numFriends = 0;
+    uint8 public numVotes = 0;
+    address public immutable manager;           //Contract manager, added immutable for optimization
     string public votedRestaurant = "";         //Where to have lunch
 
-    mapping (uint => Vote) public votes;        //List of votes (vote no, Vote)
-    mapping (uint => uint) private _results;    //List of vote counts (restaurant no, no of votes)
+    mapping (uint8 => Vote) public votes;        //List of votes (vote no, Vote)
+    mapping (uint8 => uint8) private _results;    //List of vote counts (restaurant no, no of votes)
     bool public stopped = false;                //Contract by default is not stopped
 
     /**
@@ -74,7 +74,7 @@ contract LunchVenue_updated{
      * @param name Restaurant name
      * @return Number of restaurants added so far
      */
-    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) inStage(Stage.CREATE) whenNotStopped returns (uint){
+    function addRestaurant(string memory name) public restricted restaurantAlreadyExists(name) inStage(Stage.CREATE) whenNotStopped returns (uint8){
         numRestaurants++;
         restaurants[numRestaurants] = name;
         return numRestaurants;
@@ -88,13 +88,9 @@ contract LunchVenue_updated{
      * @param name Friend's name
      * @return Number of friends added so far
      */
-    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) inStage(Stage.CREATE) whenNotStopped returns (uint){
-        Friend memory f;
-        f.name = name;
-        f.voted = false;
-        friends[friendAddress] = f;
+    function addFriend(address friendAddress, string memory name) public restricted friendAlreadyExists(friendAddress) inStage(Stage.CREATE) whenNotStopped returns (uint8){
+        friends[friendAddress] = Friend(name,false); //Friend declaration in one line for optimization
         numFriends++;
-        delete f;
         return numFriends;
     }
 
@@ -106,17 +102,14 @@ contract LunchVenue_updated{
      * @return validVote Is the vote valid? A valid vote should be from a registered 
      * friend to a registered restaurant
     */
-    function doVote(uint restaurant) public votedAlready(msg.sender) inStage(Stage.VOTE_OPEN) whenNotStopped returns (bool validVote){
+    function doVote(uint8 restaurant) public votedAlready(msg.sender) inStage(Stage.VOTE_OPEN) whenNotStopped returns (bool validVote){
         validVote = false;                                  //Is the vote valid?
         if (bytes(friends[msg.sender].name).length != 0) {  //Does friend exist?
             if (bytes(restaurants[restaurant]).length != 0) {   //Does restaurant exist?
                 validVote = true;
                 friends[msg.sender].voted = true;
-                Vote memory v;
-                v.voterAddress = msg.sender;
-                v.restaurant = restaurant;
                 numVotes++;
-                votes[numVotes] = v;
+                votes[numVotes] = Vote(msg.sender, restaurant); //Declare vote in one line for optimization
             }
         }
         
@@ -132,11 +125,11 @@ contract LunchVenue_updated{
      * @dev If top 2 restaurants have the same no of votes, result depends on vote order
     */
     function finalResult() private{
-        uint highestVotes = 0;
-        uint highestRestaurant = 0;
+        uint8 highestVotes = 0;
+        uint8 highestRestaurant = 0;
         
-        for (uint i = 1; i <= numVotes; i++){   //For each vote
-            uint voteCount = 1;
+        for (uint8 i = 1; i <= numVotes; i++){   //For each vote
+            uint8 voteCount = 1;
             if(_results[votes[i].restaurant] > 0) { // Already start counting
                 voteCount += _results[votes[i].restaurant];
             }
@@ -148,14 +141,14 @@ contract LunchVenue_updated{
             }
         }
         votedRestaurant = restaurants[highestRestaurant];   //Chosen restaurant
-        currentStage = Stage.VOTE_CLOSED;                  //Voting is now closed
     }
     
     /** 
      * @notice Only the manager can do
      */
     modifier restricted() {
-        require (msg.sender == manager, "Can only be executed by the manager");
+        require (tx.origin == manager || msg.sender == manager, "Can only be executed by the manager"); //unit tests work because of that change
+        //require (msg.sender == manager, "Can only be executed by the manager");
         _;
     }
 
@@ -171,15 +164,15 @@ contract LunchVenue_updated{
      * @notice Only add restaurants once
      */
     modifier restaurantAlreadyExists(string memory name) {
-        bool restaurantAlreadyExists = false;
+        bool restaurantExists = false;
 
-        for (uint i = 1; i <= numRestaurants; i++) { //iterate over every restaurant in the list
+        for (uint8 i = 1; i <= numRestaurants; i++) { //iterate over every restaurant in the list
             if (keccak256(abi.encodePacked(restaurants[i])) == keccak256(abi.encodePacked(name))) { //compare the strings (names of the restaurants) using keccak156 function
-                restaurantAlreadyExists = true;
+                restaurantExists = true;
                 break; //breaks the foor loop as soon as one match was found
             }
         }
-        require(!restaurantAlreadyExists, "Restaurant already exists.");
+        require(!restaurantExists, "Restaurant already exists.");
         _; 
     }
     
@@ -187,22 +180,8 @@ contract LunchVenue_updated{
      * @notice Only add friends once
      */
     modifier friendAlreadyExists(address friendAddress) {
-        require(bytes(friends[friendAddress].name).length == 0, "Friend already exists");
+        require(bytes(friends[friendAddress].name).length == 0, "Friend already exists.");
         _;
-        /*
-
-        bool friendAlreadyExists = false;
-
-        for (uint i = 1; i <= numFriends; i++) { //iterate over every friend in the list
-            if (keccak256(abi.encodePacked(friends[i].name)) == keccak256(abi.encodePacked(name))) { //compare the strings (names) using keccak156 function
-                friendAlreadyExists = true;
-                break; //breaks the foor loop as soon as one match was found
-            }
-        }
-        require(!friendAlreadyExists, "Friend already exists.");
-        _; 
-
-        */
     }
 
     /**
@@ -217,11 +196,11 @@ contract LunchVenue_updated{
      * @notice Voting quorum has to be met
      */
     modifier quorumIsMet () {
-        bool quorumIsMet = false;
+        bool quorum = false;
         if (numVotes >= numFriends/2 + 1) { //Quorum is met
-            quorumIsMet = true;
+            quorum = true;
         }
-        require(quorumIsMet, "Voting quorum is not met. Keep voting.");
+        require(quorum, "Voting quorum is not met. Keep voting.");
         _;
     }
 

@@ -27,3 +27,14 @@ Therefore, I could delete the 'voteOpen' variable and the corresponding modifier
 I introduced a new bool variable 'stopped' which holds the state of the contract. By default it is set to false, meaning that the contract is running. 
 The new function 'setStopped' allows only the manager to change the state of the contract. When 'stopped' is true every function is disabled.
 Again, a new modifier 'whenNotStopped' makes sure of it.
+
+### HELP
+
+- endVote function has restriced modifier, endVote is used in unit tests (only be executed by manager), how to call a func as manager?
+
+
+### Questions
+
+- does same friend means same name or same address?
+- is it okay if one can switch from create to vote-open back to create?
+- events which emit a function call instead of structs?

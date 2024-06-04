@@ -13,7 +13,7 @@ import "../contracts/LunchVenue_updated.sol";
 
 // File name has to end with '_test.sol', this file can contain more than one testSuite contracts
 /// Inherit 'LunchVenue_updated' contract
-contract LunchVenueTest_updatet is LunchVenue_updated {
+contract LunchVenueTest_updated is LunchVenue_updated {
     
     // Variables used to emulate different accounts  
     address acc0;   
@@ -21,6 +21,7 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
     address acc2;
     address acc3;
     address acc4;
+    address acc5;
 
     /// 'beforeAll' runs before all other tests
     /// More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'
@@ -31,6 +32,7 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
         acc2 = TestsAccounts.getAccount(2);
         acc3 = TestsAccounts.getAccount(3);
         acc4 = TestsAccounts.getAccount(4);
+        acc5 = TestsAccounts.getAccount(5);
     }
 
     /// Check manager
@@ -39,11 +41,25 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
         Assert.equal(manager, acc0, 'Manager should be acc0');
     }
     
-    /// Add restuarant as manager
+    /// Add restaurant as manager
     /// When msg.sender isn't specified, default account (i.e., account-0) is the sender
     function setRestaurant() public {
         Assert.equal(addRestaurant('Courtyard Cafe'), 1, 'Should be equal to 1');
         Assert.equal(addRestaurant('Uni Cafe'), 2, 'Should be equal to 2');
+    }
+
+    /// Try to add restaurant twice
+    function setRestaurantTwiceShouldFail() public {
+        try this.addRestaurant('Uni Cafe') returns (uint8){
+            Assert.ok(false, 'Method execution did not fail');
+        } catch Error(string memory reason) {
+            // Compare failure reason, check if it is as expected
+            Assert.equal(reason, 'Restaurant already exists.', 'Failed with unexpected reason');
+        } catch Panic(uint /* errorCode */) { // In case of a panic
+            Assert.ok(false, 'Failed unexpected with error code');
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'Failed unexpected');
+        }
     }
     
     /// Try to add a restaurant as a user other than manager. This should fail
@@ -51,7 +67,7 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
     function setRestaurantFailure() public {
         // Try to catch reason for failure using try-catch . When using
         // try-catch we need 'this' keyword to make function call external
-        try this.addRestaurant('Atomic Cafe') returns (uint v){
+        try this.addRestaurant('Atomic Cafe') returns (uint8 v){
             Assert.notEqual(v, 3, 'Method execution did not fail');
         } catch Error(string memory reason) {
             // Compare failure reason, check if it is as expected
@@ -70,15 +86,32 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
        Assert.equal(addFriend(acc1, 'Bob'), 2, 'Should be equal to 2');
        Assert.equal(addFriend(acc2, 'Charlie'), 3, 'Should be equal to 3');
        Assert.equal(addFriend(acc3, 'Eve'), 4, 'Should be equal to 4');
+       Assert.equal(addFriend(acc4, 'Fabi'), 5, 'Should be equal to 5');
     }
-    
+
     /// Try adding friend as a user other than manager. This should fail
+    /// #sender account-2
     function setFriendFailure() public {
-        try this.addFriend(acc4, 'Daniels') returns (uint f) {
-            Assert.notEqual(f, 5, 'Method execution did not fail');
-        } catch Error(string memory reason) { // In case revert() called
+        try this.addFriend(acc5, 'Daniels') returns (uint8 f) {
+            Assert.notEqual(f, 6, 'Method execution did not fail'); // This should always fail because we expect addFriend to revert
+        } catch Error(string memory reason) { // In case revert() is called
             // Compare failure reason, check if it is as expected
             Assert.equal(reason, 'Can only be executed by the manager', 'Failed with unexpected reason');
+        } catch Panic(uint /* errorCode */) { // In case of a panic
+            Assert.ok(false, 'Failed unexpectedly with panic error code');
+        }   catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'Failed unexpectedly');
+        }   
+    }
+
+
+    /// Try to add a friend twice
+    function addFriendTwiceShouldFail() public {
+        try this.addFriend(acc0, 'Alice') returns (uint8) {
+            Assert.ok(false, "Adding existing friend should fail");
+        } catch Error(string memory reason) {
+            // Assert that the error message is as expected
+            Assert.equal(reason, 'Friend already exists.', 'Failed with unexpected reason');
         } catch Panic( uint /* errorCode */) { // In case of a panic
             Assert.ok(false , 'Failed unexpected with error code');
         } catch (bytes memory /*lowLevelData*/) {
@@ -89,48 +122,95 @@ contract LunchVenueTest_updatet is LunchVenue_updated {
     /// Vote as Bob (acc1)
     /// #sender: account-1
     function vote() public {
+        currentStage = Stage.VOTE_OPEN;
         Assert.ok(doVote(2), "Voting result should be true");
     }
 
+    /// Try voting twice as Bob (acc1)
+    /// #sender: account-1
+    function voteTwiceShouldFail() public {
+        currentStage = Stage.VOTE_OPEN;
+         try this.doVote(2) returns (bool validVote) {
+            Assert.equal(validVote, true, 'Method execution did not fail');
+        } catch Error(string memory reason) {
+            // Compare failure reason, check if it is as expected
+            Assert.equal(reason, 'Can only vote once.', 'Failed with unexpected reason');
+        } catch Panic( uint /* errorCode */) { // In case of a panic
+            Assert.ok(false , 'Failed unexpected with error code');        
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'Failed unexpectedly');
+        }
+    }  
+   
     /// Vote as Charlie
     /// #sender: account-2
     function vote2() public {
+        currentStage = Stage.VOTE_OPEN;
         Assert.ok(doVote(1), "Voting result should be true");
     }
     
 	/// Try voting as a user not in the friends list. This should fail
-    /// #sender: account-4
+    /// #sender: account-6
     function voteFailure() public {
+        currentStage = Stage.VOTE_OPEN;
         Assert.equal(doVote(1), false, "Voting result should be false");
     }
 
     /// Vote as Eve
     /// #sender: account-3
     function vote3() public {
+        currentStage = Stage.VOTE_OPEN;
         Assert.ok(doVote(2), "Voting result should be true");
     }
 
+     /// Try voting for an invalid restaurant
+    function voteInvalidRestaurantShouldFail() public {
+        currentStage = Stage.VOTE_OPEN;
+        Assert.equal(doVote(3), false, "Voting result should be false for invalid restaurant");
+    }
+
     /// Verify lunch venue is set correctly
+    /// #sender: account-0
     function lunchVenueTest() public {
+        this.endVote();
         Assert.equal(votedRestaurant, 'Uni Cafe', 'Selected restaurant should be Uni Cafe');
     }
     
     /// Verify voting is now closed
     function voteOpenTest() public {
-        Assert.equal(voteOpen, false, 'Voting should be closed');
+        Assert.equal(uint(currentStage), uint(Stage.VOTE_CLOSED), 'Voting should be closed');
     }
     
     /// Verify voting after vote closed. This should fail
     function voteAfterClosedFailure() public {
+        currentStage = Stage.VOTE_CLOSED;
         try this.doVote(1) returns (bool validVote) {
             Assert.equal(validVote, true, 'Method execution did not fail');
         } catch Error(string memory reason) {
             // Compare failure reason, check if it is as expected
-            Assert.equal(reason, 'Can vote only while voting is open.', 'Failed with unexpected reason');
+            Assert.equal(reason, 'Function can not be called in this stage.', 'Failed with unexpected reason');
         } catch Panic( uint /* errorCode */) { // In case of a panic
             Assert.ok(false , 'Failed unexpected with error code');        
         } catch (bytes memory /*lowLevelData*/) {
             Assert.ok(false, 'Failed unexpectedly');
         }
+    }
+
+    /// Manager wants to end the vote in the wrong stage
+    function endVoteInCreateStageShouldFail() public {
+        currentStage = Stage.CREATE; // Ensure contract is in CREATE phase
+        try this.endVote() {
+            Assert.ok(false, 'Method execution did not fail');
+        } catch Error(string memory reason) {
+            Assert.equal(reason, 'Function can not be called in this stage.', 'Failed with unexpected reason');
+        } catch {
+            Assert.ok(false, 'Failed with unexpected error');
+        }
+    }
+
+    /// Test that only the manager can call 'setStopped' function
+    function setStoppedByManager() public {
+        this.setStopped();
+        Assert.equal(stopped, true, "Stopped state should be true after manager's call");
     }
 }

@@ -26,9 +26,9 @@
 				"name": "addFriend",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -45,9 +45,9 @@
 				"name": "addRestaurant",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "nonpayable",
@@ -69,9 +69,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "restaurant",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"name": "doVote",
@@ -134,9 +134,9 @@
 				"name": "numFriends",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -147,9 +147,9 @@
 				"name": "numRestaurants",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -160,9 +160,9 @@
 				"name": "numVotes",
 				"outputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -171,9 +171,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"name": "restaurants",
@@ -237,9 +237,9 @@
 			{
 				"inputs": [
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"name": "votes",
@@ -250,9 +250,9 @@
 						"type": "address"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "uint8",
 						"name": "restaurant",
-						"type": "uint256"
+						"type": "uint8"
 					}
 				],
 				"stateMutability": "view",
@@ -285,7 +285,7 @@
 				"constructor": {
 					"details": "Set manager when contract starts"
 				},
-				"doVote(uint256)": {
+				"doVote(uint8)": {
 					"details": "To simplify the code duplicate votes by a friend is not checked --> now implemented with votedAlready modifier",
 					"params": {
 						"restaurant": "Restaurant number being voted"
@@ -307,7 +307,7 @@
 				"addRestaurant(string)": {
 					"notice": "Add a new restaurant"
 				},
-				"doVote(uint256)": {
+				"doVote(uint8)": {
 					"notice": "Vote for a restaurant"
 				},
 				"endVote()": {
@@ -343,11 +343,11 @@
 	},
 	"sources": {
 		"contracts/LunchVenue_updated.sol": {
-			"keccak256": "0x80430885d68a2d30ab738bac1e42eac64739fc4c4ea327722c4b797b0b50dd02",
+			"keccak256": "0x4d2e42217cc9c1a8847f57e63df7089674e00361fdde92bf8fae0321239e52f1",
 			"license": "UNLICENSED",
 			"urls": [
-				"bzz-raw://7627a3d804befb97595c4eb58acaddcb8da721dbda3a2d79dfbf47a1e930a4b7",
-				"dweb:/ipfs/QmdQUPJjk3JQZqcxgdgjAR846YvLtfiaSRGMM3HJacm59c"
+				"bzz-raw://09fbf668fda376830e0e3ad91b9a039509b1d5ce379bab43a72c002ee4a094bd",
+				"dweb:/ipfs/QmX7Xpo5yyCzfFmB5t9DJs4LsSpX6knftSCN6amwbTLXeN"
 			]
 		}
 	},
