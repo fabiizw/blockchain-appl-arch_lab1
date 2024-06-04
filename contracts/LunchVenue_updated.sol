@@ -32,6 +32,7 @@ contract LunchVenue_updated{
     mapping (uint8 => uint8) private _results;    //List of vote counts (restaurant no, no of votes)
     bool public stopped = false;                //Contract by default is not stopped
 
+
     /**
      * @dev Set manager when contract starts
      */

@@ -21,7 +21,9 @@ For example, in the 'CREATE' stage one can execute the 'addFriends' function but
 Therefore, I could delete the 'voteOpen' variable and the corresponding modifier.
 
 ### Feat. 4
-
+Not implemented, but here's how I would do it. Add a new variable 'deadlineBlock'. In the startVote function I would set it to the current block + 135 (which is around 30min).
+I would add a modifier to the 'doVote' function which only allows to vote if the deadline was not exceeded. The 'doVote' function has to check if the deadline is met and then set
+the current stage to 'VOTE_CLOSED'.
 
 ### Feat. 5
 
