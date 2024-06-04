@@ -1,10 +1,10 @@
 ### Feat. 1 
-The struct friends keeps track of the bool 'voted'. I implement this feature with a modifier which validates the value of this variable. 
+The struct friends keeps track of the bool 'voted'. I implemented this feature with a modifier which validates the value of this variable. 
 The 'doVote' function uses this modifier and can only be executed if the value of voted for that specific friend is still false (he has not already voted).
 
 ### Feat. 2
 
-Again I implemented this feature by adding new modifiers. For the check, that a restaurant is added only once I iterate over the list of restaurants and compare
+Again, I implemented this feature by adding new modifiers. For the check, that a restaurant is added only once I iterate over the list of restaurants and compare
 them with the one, which the manager adds. For the friend check, I validate, if the address has already been added to the friends list. 
 The 'addRestaurant' and 'addFriends' functions use these modifiers, respectivly.
 
@@ -22,6 +22,7 @@ Therefore, I could delete the 'voteOpen' variable and the corresponding modifier
 
 ### Feat. 4
 
+
 ### Feat. 5
 
 I introduced a new bool variable 'stopped' which holds the state of the contract. By default it is set to false, meaning that the contract is running. 
@@ -38,5 +39,16 @@ again less gas consuming. I also added the immutable keyword to the manager addr
 
 I added test cases, which check if a friend is added twice, a restaurant is added twice and if a friend voted twice. 
 Moreover, I have a test which validates, that the 'setStopped' function can only be executed by the manager. Same goes for the 'endVote' function, there is also a test for this.
+At last, I prove that no function can be called when the contract is stopped.
+
+Added tests: 
+-'Set restaurent twice should fail', 
+-'Add friend twice should fail',
+-'Vote twice should fail',
+-'Set stopped by manager',
+-'Test doVote when stopped should fail',
+-'End vote in create stage should fail'
+
 
 ### Known issues
+There are no knows issues.

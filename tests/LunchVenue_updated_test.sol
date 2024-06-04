@@ -22,7 +22,6 @@ contract LunchVenueTest_updated is LunchVenue_updated {
     address acc2;
     address acc3;
     address acc4;
-    address acc5;
 
     /// 'beforeAll' runs before all other tests
     /// More special functions are: 'beforeEach', 'beforeAll', 'afterEach' & 'afterAll'
@@ -32,7 +31,7 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         acc1 = TestsAccounts.getAccount(1);
         acc2 = TestsAccounts.getAccount(2);
         acc3 = TestsAccounts.getAccount(3);
-        acc4 = TestsAccounts.getAccount(4);
+        acc4 = TestsAccounts.getAccount(5);
 
         currentStage = Stage.CREATE;
         stopped = false;
@@ -106,10 +105,10 @@ contract LunchVenueTest_updated is LunchVenue_updated {
     }
 
     /// Try adding friend as a user other than manager. This should fail
-    /// #sender account-3
+    /// #sender: account-3
     function setFriendFailure() public {
-        try this.addFriend(acc5, 'Daniels') returns (uint8 f) {
-            Assert.notEqual(f, 6, 'Method execution did not fail'); // This should always fail because we expect addFriend to revert
+        try this.addFriend(acc4, 'Daniels') returns (uint8) {
+            Assert.ok(false, "Addding friend as a user other than manager should fail"); // This should always fail because we expect addFriend to revert
         } catch Error(string memory reason) { // In case revert() is called
             // Compare failure reason, check if it is as expected
             Assert.equal(reason, 'Can only be executed by the manager', 'Failed with unexpected reason');
@@ -197,6 +196,28 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         }
     }
 
+    /// Test that only the manager can call 'setStopped' function
+    function setStoppedByManager() public {
+        this.setStopped();
+        Assert.equal(stopped, true, "Stopped state should be true after manager's call");
+    }
+
+    /// Try to vote when the contract is stopped
+    function testDoVoteWhenStoppedShouldFail() public {
+        stopped = true;
+        currentStage = Stage.VOTE_OPEN;
+        try this.doVote(1) returns (bool validVote) {
+            Assert.equal(validVote, true, 'Method execution did not fail');
+        } catch Error(string memory reason) {
+            // Compare failure reason, check if it is as expected
+            Assert.equal(reason, 'Contract is stopped.', 'Failed with unexpected reason');
+        } catch Panic( uint /* errorCode */) { // In case of a panic
+            Assert.ok(false , 'Failed unexpected with error code');        
+        } catch (bytes memory /*lowLevelData*/) {
+            Assert.ok(false, 'Failed unexpectedly');
+        }
+    }
+
     /// Manager wants to end the vote in the wrong stage
     function endVoteInCreateStageShouldFail() public {
         currentStage = Stage.CREATE; // Ensure contract is in CREATE stage
@@ -207,11 +228,5 @@ contract LunchVenueTest_updated is LunchVenue_updated {
         } catch {
             Assert.ok(false, 'Failed with unexpected error');
         }
-    }
-
-    /// Test that only the manager can call 'setStopped' function
-    function setStoppedByManager() public {
-        this.setStopped();
-        Assert.equal(stopped, true, "Stopped state should be true after manager's call");
     }
 }
