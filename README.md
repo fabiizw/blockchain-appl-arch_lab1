@@ -51,6 +51,11 @@ Added tests:
 -'Test doVote when stopped should fail',
 -'End vote in create stage should fail'
 
+All tests were successful.
 
 ### Known issues
 There are no knows issues.
+
+
+### Github
+Here is the link to my github repo: https://github.com/fabiizw/blockchain-appl-arch_lab1.git
